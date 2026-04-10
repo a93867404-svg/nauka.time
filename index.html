@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURITY GATEWAY | Авторизація користувача</title>
+    <style>
+        body { background: #050505; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        .window { background: #0e0e0e; border: 1px solid #333; padding: 40px; max-width: 450px; width: 90%; border-radius: 8px; text-align: center; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid #333; color: #00ff41; border-radius: 4px; box-sizing: border-box; outline: none; font-family: monospace; }
+        button { background: #007acc; color: #fff; border: none; padding: 14px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; margin-top: 15px; transition: 0.3s; }
+        button:hover { background: #005fa3; }
+        button:disabled { background: #222; color: #555; }
+        .ip-badge { background: #1a1a1a; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.8rem; color: #888; margin-top: 10px; }
+        .ip-value { color: #00ff41; font-weight: bold; }
+        .legal-note { font-size: 13px; background: #1a0000; padding: 15px; border-left: 4px solid #ff4444; color: #ff9999; margin-bottom: 20px; text-align: left; }
+        #app-content { display: none; width: 100%; max-width: 800px; padding: 40px 20px; }
+        .report-card { background: #fff; color: #111; padding: 40px; border-radius: 4px; box-shadow: 0 0 30px rgba(0,0,0,0.5); line-height: 1.6; }
+        .comment-section { background: #1a1a1a; padding: 30px; border-radius: 8px; margin-top: 20px; border: 1px solid #333; }
+        .comment { background: #222; padding: 15px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #007acc; }
+    </style>
+</head>
+<body onload="initSystem()">
+
+    <div id="step-auth" class="window">
+        <h2 style="color:#fff;">ВХІД ДО СИСТЕМИ</h2>
+        <p style="font-size:0.8rem; color:#666;">Вкажіть ваш логін для ідентифікації в мережі</p>
+        <input type="text" id="login-field" placeholder="Ваш нікнейм або прізвище">
+        <div class="ip-badge">Системний IP: <span id="user-ip-display" class="ip-value">Завантаження...</span></div>
+        <button onclick="handleAuth()">УВІЙТИ</button>
+        <div id="error-block" style="color:#ff4444; display:none; margin-top:10px; font-size:0.8rem;">Вкажіть логін!</div>
+    </div>
+
+    <div id="step-legal" class="window">
+        <h2 style="color:#ff4444;">УГОДА БЕЗПЕКИ</h2>
+        <div class="legal-note">
+            Даний матеріал призначений для освітніх цілей. Ви погоджуєтесь, що ваші дані (Логін та IP) зафіксовані в системі. Копіювання тексту заборонено.
+        </div>
+        <div style="text-align: left; margin: 15px 0;">
+            <input type="checkbox" id="legal-check" style="width: auto;" onclick="document.getElementById('final-btn').disabled = !this.checked">
+            <label for="legal-check" style="font-size: 13px; cursor: pointer;"> Я згоден з умовами</label>
+        </div>
+        <button id="final-btn" disabled onclick="handleLegal()">ВІДКРИТИ СТАТТЮ</button>
+    </div>
+
+    <div id="app-content">
+        <div class="report-card">
+            <h1 style="color: #004a80;">Атомне бомбардування Хіросіми та Нагасакі</h1>
+            <p><strong>Авторизований доступ:</strong> <span id="auth-user-name" style="color:#cc0000;"></span></p>
+            <hr>
+            <h3>Історична довідка</h3>
+            <p>6 та 9 серпня 1945 року стали чорними датами в історії людства...</p>
+            </div>
+
+        <div class="comment-section">
+            <h3 style="color:#fff;">Коментарі до статті</h3>
+            <div id="comments-display"></div>
+            <textarea id="comment-input" rows="3" style="width:100%; margin-top:20px;" placeholder="Ваша думка..."></textarea>
+            <button onclick="addComment()">ЗАЛИШИТИ КОМЕНТАР</button>
+            <button onclick="logout()" style="background:#333; margin-top:10px; font-size:0.8rem;">Вийти</button>
+        </div>
+    </div>
+
+    <script>
+        let currentIP = "Unknown";
+
+        // Получаем IP
+        async function getIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                currentIP = data.ip;
+                document.getElementById('user-ip-display').innerText = currentIP;
+            } catch (e) { document.getElementById('user-ip-display').innerText = "127.0.0.1"; }
+        }
+
+        function initSystem() {
+            getIP();
+            const isAuth = localStorage.getItem('isAuth') === 'true';
+            const isLegal = localStorage.getItem('isLegal') === 'true';
+            if (isAuth && isLegal) { showContent(); }
+            else if (isAuth) { showStep('step-legal'); }
+            else { showStep('step-auth'); }
+        }
+
+        function handleAuth() {
+            const l = document.getElementById('login-field').value.trim();
+            if (l !== "") {
+                localStorage.setItem('isAuth', 'true');
+                localStorage.setItem('loggedAs', l);
+                localStorage.setItem('userIP', currentIP);
+                showStep('step-legal');
+            } else { document.getElementById('error-block').style.display = 'block'; }
+        }
+
+        function handleLegal() {
+            localStorage.setItem('isLegal', 'true');
+            showContent();
+        }
+
+        function showStep(id) {
+            document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function showContent() {
+            document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+            document.getElementById('app-content').style.display = 'block';
+            document.getElementById('auth-user-name').innerText = localStorage.getItem('loggedAs') + " [" + localStorage.getItem('userIP') + "]";
+            renderComments();
+        }
+
+        // Защита от копирования
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'u')) {
+                e.preventDefault();
+                alert("Копіювання обмежено автором!");
+            }
+        });
+
+        // Комментарии (упрощенная логика)
+        function renderComments() {
+            const display = document.getElementById('comments-display');
+            const list = JSON.parse(localStorage.getItem('my_comments') || '[]');
+            display.innerHTML = list.map(c => `
+                <div class="comment">
+                    <b style="color:#007acc;">${c.author}:</b>
+                    <div style="color:#eee; margin-top:5px;">${c.text}</div>
+                </div>
+            `).join('');
+        }
+
+        function addComment() {
+            const input = document.getElementById('comment-input');
+            const author = localStorage.getItem('loggedAs');
+            if (!input.value.trim()) return;
+            const list = JSON.parse(localStorage.getItem('my_comments') || '[]');
+            list.push({ author: author, text: input.value });
+            localStorage.setItem('my_comments', JSON.stringify(list));
+            input.value = '';
+            renderComments();
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
+    </script>
+</body>
+</html>
