@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURITY GATEWAY | Архівні дані</title>
+    <style>
+        body { background: #050505; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .window { background: #0e0e0e; border: 1px solid #333; padding: 40px; max-width: 450px; width: 90%; border-radius: 8px; text-align: center; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid #333; color: #00ff41; border-radius: 4px; box-sizing: border-box; outline: none; }
+        button { background: #007acc; color: #fff; border: none; padding: 14px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; margin-top: 15px; transition: 0.3s; }
+        button:hover { background: #005fa3; }
+        button:disabled { background: #222; color: #555; }
+        
+        .ip-badge { background: #1a1a1a; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 0.8rem; color: #888; margin-top: 10px; }
+        .legal-note { font-size: 13px; background: #1a0000; padding: 15px; border-left: 4px solid #ff4444; color: #ff9999; margin-bottom: 20px; text-align: left; }
+
+        /* Оформление статьи */
+        #app-content { display: none; width: 100%; max-width: 850px; padding: 40px 20px; }
+        .report-card { background: #fff; color: #111; padding: 50px; border-radius: 4px; box-shadow: 0 0 50px rgba(0,0,0,0.7); }
+        h1 { color: #004a80; border-bottom: 3px solid #004a80; padding-bottom: 10px; text-transform: uppercase; font-size: 1.5rem; }
+        h2 { color: #333; font-size: 1.2rem; border-left: 5px solid #007acc; padding-left: 15px; margin-top: 30px; }
+        p { line-height: 1.8; text-align: justify; margin-bottom: 15px; }
+        
+        /* Комментарии внизу */
+        .comment-section { background: #111; padding: 30px; border-radius: 8px; margin-top: 40px; border: 1px solid #333; }
+        .comment { background: #1a1a1a; padding: 12px; border-radius: 4px; margin-bottom: 10px; border-left: 3px solid #007acc; font-size: 0.9rem; }
+    </style>
+</head>
+<body onload="initSystem()">
+
+    <div id="step-auth" class="window">
+        <h2>Доступ до архіву</h2>
+        <input type="text" id="login-field" placeholder="Ваш Логін">
+        <div class="ip-badge">IP пристрою: <span id="user-ip-display" style="color:#00ff41;">...</span></div>
+        <button onclick="handleAuth()">УВІЙТИ</button>
+    </div>
+
+    <div id="step-legal" class="window">
+        <h2 style="color:#ff4444; border:none;">Протокол безпеки</h2>
+        <div class="legal-note">Матеріали містять історичні дані про використання ядерної зброї. Копіювання заборонено адміністратором. Ваша активність фіксується.</div>
+        <div style="text-align: left; margin: 15px 0;">
+            <input type="checkbox" id="legal-check" onclick="document.getElementById('final-btn').disabled = !this.checked">
+            <label for="legal-check" style="font-size: 13px; cursor: pointer; color:#fff;"> Ознайомлений(а)</label>
+        </div>
+        <button id="final-btn" disabled onclick="handleLegal()">ВІДКРИТИ ФАЙЛ</button>
+    </div>
+
+    <div id="app-content">
+        <div class="report-card">
+            <h1>Атомне бомбардування Хіросіми та Нагасакі: Хроніка трагедії</h1>
+            <div style="font-size:0.8rem; color:#666; margin-bottom:20px;">
+                ID СЕСІЇ: <span id="auth-user-name" style="color:#c00;"></span>
+            </div>
+
+            <h2>1. Передумови та операція «Малюк»</h2>
+            <p>6 серпня 1945 року о 08:15 ранку американський бомбардувальник B-29 «Enola Gay» скинув атомну бомбу «Малюк» на японське місто Хіросіма. Це був перший в історії людства випадок бойового застосування ядерної зброї. Вибух стався на висоті близько 600 метрів, миттєво спричинивши вогняну кулю з температурою в кілька мільйонів градусів.</p>
+
+            <h2>2. Трагедія Нагасакі</h2>
+            <p>Через три дні, 9 серпня, друга атомна бомба під назвою «Товстун» була скинута на Нагасакі. Основним об'єктом було місто Кокура, але через погану видимість ціль було змінено. Нагасакі було промисловим центром, і наслідки вибуху були не менш катастрофічними, ніж у Хіросімі.</p>
+
+            <h2>3. Наслідки та капітуляція</h2>
+            <p>Внаслідок вибухів та їхніх наслідків (променева хвороба, опіки) загальна кількість загиблих перевищила 200 000 осіб. 15 серпня 1945 року Японія оголосила про свою капітуляцію, що фактично поклало край Другій світовій війні. Ці події залишаються вічним нагадуванням про руйнівну силу технологій.</p>
+        </div>
+
+        <div class="comment-section">
+            <h3 style="color:#fff; margin-top:0;">Обговорення</h3>
+            <div id="comments-display"></div>
+            <textarea id="comment-input" rows="2" placeholder="Ваша думка..."></textarea>
+            <button onclick="addComment()" style="padding:10px;">ВІДПРАВИТИ</button>
+            <button onclick="logout()" style="background:#333; margin-top:10px; font-size:0.7rem; padding:5px;">Вийти з системи</button>
+        </div>
+    </div>
+
+    <script>
+        let currentIP = "127.0.0.1";
+        async function getIP() {
+            try {
+                const r = await fetch('https://api.ipify.org?format=json');
+                const d = await r.json();
+                currentIP = d.ip;
+                document.getElementById('user-ip-display').innerText = currentIP;
+            } catch(e) {}
+        }
+
+        function initSystem() {
+            getIP();
+            if (localStorage.getItem('isAuth') === 'true' && localStorage.getItem('isLegal') === 'true') { showContent(); }
+            else if (localStorage.getItem('isAuth') === 'true') { showStep('step-legal'); }
+            else { showStep('step-auth'); }
+        }
+
+        function handleAuth() {
+            const l = document.getElementById('login-field').value.trim();
+            if (l) {
+                localStorage.setItem('isAuth', 'true');
+                localStorage.setItem('loggedAs', l);
+                localStorage.setItem('userIP', currentIP);
+                showStep('step-legal');
+            }
+        }
+
+        function handleLegal() {
+            localStorage.setItem('isLegal', 'true');
+            showContent();
+        }
+
+        function showStep(id) {
+            document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function showContent() {
+            document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+            document.getElementById('app-content').style.display = 'block';
+            document.getElementById('auth-user-name').innerText = localStorage.getItem('loggedAs') + " [" + localStorage.getItem('userIP') + "]";
+            document.body.style.alignItems = 'flex-start';
+            renderComments();
+        }
+
+        function renderComments() {
+            const d = document.getElementById('comments-display');
+            const list = JSON.parse(localStorage.getItem('my_comments') || '[]');
+            d.innerHTML = list.map(c => `<div class="comment"><b style="color:#00ff41;">${c.a}:</b><br>${c.t}</div>`).join('');
+        }
+
+        function addComment() {
+            const i = document.getElementById('comment-input');
+            if (!i.value.trim()) return;
+            const list = JSON.parse(localStorage.getItem('my_comments') || '[]');
+            list.push({ a: localStorage.getItem('loggedAs'), t: i.value });
+            localStorage.setItem('my_comments', JSON.stringify(list));
+            i.value = '';
+            renderComments();
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>
