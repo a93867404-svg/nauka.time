@@ -2,113 +2,98 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Наукове дослідження — Андрій</title>
+    <title>SECURITY GATEWAY | Microsoft-GitHub Verified</title>
     <style>
-        body {
-            background-color: #0d0d0d;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .card {
-            background: #1a1a1a;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            text-align: center;
-            max-width: 850px;
-            border: 1px solid #333;
-        }
-        #secret-report {
-            display: none;
-            text-align: left;
-            color: #00ff41;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 2px #00ff41;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding-right: 15px;
-        }
-        /* Стиль скроллбара */
-        #secret-report::-webkit-scrollbar { width: 8px; }
-        #secret-report::-webkit-scrollbar-thumb { background: #00ff41; border-radius: 4px; }
-
-        h1 { color: #ffffff; }
-        .green-title {
-            color: #00ff41;
-            text-transform: uppercase;
-            border-bottom: 2px solid #00ff41;
-            padding-bottom: 10px;
-            margin-top: 25px;
-        }
-        .section-header { font-weight: bold; text-decoration: underline; margin-top: 15px; display: block; }
-        button {
-            margin-top: 20px;
-            padding: 15px 30px;
-            background: #007acc;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: 0.3s;
-            font-weight: bold;
-        }
-        button:hover { background: #005fa3; transform: scale(1.05); }
-        .footer {
-            margin-top: 30px;
-            font-size: 0.9rem;
-            color: #777;
-            border-top: 1px solid #333;
-            padding-top: 15px;
-            text-align: center;
-        }
+        body { background: #050505; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .box { background: #0e0e0e; border: 1px solid #333; padding: 40px; max-width: 850px; width: 95%; border-radius: 8px; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
+        .red-text { color: #ff4444; font-family: 'Consolas', monospace; }
+        .green-text { color: #00ff41; font-family: 'Consolas', monospace; }
+        button { background: #007acc; color: #fff; border: none; padding: 15px 30px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; transition: 0.3s; }
+        button:hover { background: #005fa3; }
+        #app-content, #captcha { display: none; }
+        
+        /* Стиль для большого доклада */
+        .report-body { text-align: left; background: #ffffff; color: #1a1a1a; padding: 40px; border-radius: 4px; line-height: 1.6; max-height: 80vh; overflow-y: auto; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #004a80; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .legal-note { font-size: 12px; background: #f0f0f0; padding: 10px; border-left: 4px solid #ff4444; color: #333; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="welcome-screen" class="card">
-        <h1>Вітаю!</h1>
-        <p>Вас вітає Андрій. Даний вебресурс створено для демонстрації результатів мого дослідження в галузі ядерної фізики та історії атомної енергетики.</p>
-        <p>Натисніть кнопку нижче, щоб ознайомитися з повною доповіддю.</p>
-        <button onclick="showReport()">Перейти до дослідження</button>
+    <div id="legal-gate" class="box">
+        <h2 class="red-text">SECURITY GATEWAY v.2.0.26</h2>
+        <div class="legal-note">
+            <strong>ПОПЕРЕДЖЕННЯ:</strong> Цей ресурс захищено інфраструктурою GitHub Security. 
+            Будь-які спроби DDoS-атак фіксуються та передаються до Кіберполіції України (ст. 361 КК України). 
+            При несанкціонованому доступі відбудеться автоматичне перенаправлення на державні ресурси моніторингу.
+        </div>
+        <p style="font-size: 14px;">Для доступу до повного тексту дослідження підтвердіть свою особу.</p>
+        <input type="checkbox" id="legal-check" onclick="document.getElementById('auth-btn').disabled = !this.checked">
+        <label for="legal-check" style="font-size: 13px; cursor: pointer;"> Я ознайомлений з правилами та приймаю юридичну відповідальність.</label>
+        <button id="auth-btn" disabled onclick="nextStep()" style="margin-top: 25px;">ПРОДОВЖИТИ</button>
     </div>
 
-    <div id="secret-report" class="card">
-        <h2 class="green-title">Комплексне дослідження: Ядерна зброя та наслідки бомбардування Хіросіми та Нагасакі</h2>
-        
-        <span class="section-header">1. Історичний контекст та "Манхеттенський проєкт"</span>
-        <p>Розробка першої у світі ядерної зброї почалася в 1942 році під кодовою назвою «Манхеттенський проєкт». Під керівництвом фізика Роберта Оппенгеймера було створено три бомби: «Gadget» (випробувальна), «Little Boy» (уранова) та «Fat Man» (плутонієва). Основною метою було досягнення критичної маси радіоактивної речовини для створення неконтрольованої ланцюгової реакції.</p>
+    <div id="captcha" class="box" style="text-align: center;">
+        <h2 class="green-text">SECURITY VERIFICATION</h2>
+        <p>Для завантаження бази даних введіть код авторизації сесії (2026):</p>
+        <input type="text" id="cap-val" style="padding: 12px; width: 120px; text-align: center; font-size: 1.5rem; background: #000; border: 1px solid #007acc; color: #00ff41; outline: none;">
+        <br><br>
+        <button onclick="finalEntry()">ВІДКРИТИ ДОСЛІДЖЕННЯ</button>
+    </div>
 
-        <span class="section-header">2. Хіросіма: Технічний аналіз вибуху 6 серпня 1945 року</span>
-        <p>О 08:15 за місцевим часом літак B-29 «Enola Gay» скинув бомбу «Little Boy». Вибух стався на висоті 600 метрів. <br>
-        - Енергія вибуху: приблизно 15 кілотонн у тротиловому еквіваленті.<br>
-        - Температура в епіцентрі: сягнула 4000°C, що призвело до миттєвого випаровування органічних структур.<br>
-        - Ударна хвиля: швидкість перевищувала 440 м/с, знищуючи будівлі в радіусі 4 кілометрів.</p>
+    <div id="app-content" style="width: 100%; display: flex; justify-content: center;">
+        <div class="box" style="background: #fff; padding: 10px;">
+            <div class="report-body">
+                <h1>Наукове дослідження: Атомне бомбардування Хіросіми та Нагасакі</h1>
+                <p><strong>Виконав:</strong> Андрій, 9-й клас</p>
+                <p><strong>Предмет:</strong> Історія та основи безпеки життєдіяльності</p>
+                
+                <h2>1. Передумови та "Манхеттенський проєкт"</h2>
+                <p>На початку 1940-х років світова спільнота опинилася перед обличчям створення зброї небаченої потужності. У США розпочався секретний "Манхеттенський проєкт", метою якого було випередження нацистської Німеччини у створенні ядерної бомби. Під керівництвом Роберта Оппенгеймера було створено перші робочі прототипи зброї масового ураження.</p>
+                
+                <h2>2. Трагедія Хіросіми (6 серпня 1945)</h2>
+                <p>О 08:15 ранку американський бомбардувальник B-29 «Enola Gay» скинув на Хіросіму уранову бомбу під назвою «Little Boy» (Малюк). Вибух стався на висоті 600 метрів. 
+                <ul>
+                    <li>Температура в епіцентрі досягла 4000 градусів Цельсія.</li>
+                    <li>Ударна хвиля миттєво зруйнувала 90% будівель міста.</li>
+                    <li>Від первинного вибуху загинуло близько 80 000 осіб, пізніше кількість жертв зросла до 140 000 через радіацію.</li>
+                </ul>
+                </p>
 
-        <span class="section-header">3. Нагасакі: Специфіка використання плутонію 9 серпня 1945 року</span>
-        <p>Бомба «Fat Man» була значно потужнішою (21 кілотонна), але рельєф міста Нагасакі (гори) стримав поширення ударної хвилі. Проте, радіоактивне зараження виявилося критичним. Було зафіксовано «чорний дощ» — радіоактивні опади, що спричинили масову променеву хворобу серед тих, хто вижив після першого удару.</p>
+                <h2>3. Удар по Нагасакі (9 серпня 1945)</h2>
+                <p>За три дні після першої атаки, було прийнято рішення про друге бомбардування. О 11:02 літак скинув плутонієву бомбу «Fat Man» (Товстун) на Нагасакі. Рельєф міста частково стримав ударну хвилю, проте кількість жертв була катастрофічною — понад 74 000 осіб загинуло до кінця року.</p>
 
-        <span class="section-header">4. Термодинаміка та вплив на сучасну безпеку реакторів</span>
-        <p>Аналіз даних цих подій дозволив вченим розробити сучасні системи захисту ядерних реакторів. Вивчення поведінки ядерного палива в екстремальних умовах лежить в основі роботи систем стримування (контайнменту) та аварійного охолодження зони реактора. Це дослідження підкреслює, що ядерна енергія потребує найвищого рівня відповідальності.</p>
+                <h2>4. Наслідки: Променева хвороба та екологія</h2>
+                <p>Бомбардування відкрило нову еру в медицині та екології. Тисячі людей постраждали від "чорного дощу" (радіоактивні опади) та гострої променевої хвороби. Наступні покоління "хібакуся" (тих, хто вижив) стикалися з генетичними мутаціями та онкологічними захворюваннями.</p>
 
-        <span class="section-header">5. Глобальні висновки дослідження</span>
-        <p>Використання ядерної енергії назавжди змінило геополітичну карту світу. Сучасна фізика спрямована на використання процесу ділення ядер виключно в мирних цілях, мінімізуючи ризики повторення подій 1945 року.</p>
-
-        <div class="footer">Наукову роботу підготував: <strong>Андрій</strong><br>© 2026 Всі права захищені.</div>
-        <button onclick="location.reload()" style="background: #333; font-size: 0.8rem;">Повернутися до початку</button>
+                <h2>5. Висновки для людства</h2>
+                <p>Події 1945 року стали уроком для всього світу. Сьогодні Хіросіма є міжнародним містом миру. Моє дослідження доводить: використання ядерної зброї є неприпустимим, а міжнародні договори про нерозповсюдження є ключем до виживання цивілізації.</p>
+                
+                <hr>
+                <p style="text-align: center; color: #666; font-style: italic;">Дослідження захищене від копіювання. Усі права належать автору проєкту.</p>
+                <button onclick="window.location.reload()" style="background: #333; margin-top: 20px;">ПОВЕРНУТИСЯ В ГОЛОВНЕ МЕНЮ</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        function showReport() {
-            document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('secret-report').style.display = 'block';
-            document.body.style.backgroundColor = "#050505";
+        function triggerRedirect() {
+            window.location.href = "https://cyberpolice.gov.ua/";
+        }
+
+        function nextStep() {
+            document.getElementById('legal-gate').style.display = 'none';
+            document.getElementById('captcha').style.display = 'block';
+        }
+
+        function finalEntry() {
+            if(document.getElementById('cap-val').value === "2026") {
+                document.getElementById('captcha').style.display = 'none';
+                document.getElementById('app-content').style.display = 'flex';
+                document.body.style.alignItems = 'flex-start'; // Чтобы длинный текст удобно скроллился
+            } else { 
+                triggerRedirect(); // Помилка — одразу в поліцію
+            }
         }
     </script>
 </body>
