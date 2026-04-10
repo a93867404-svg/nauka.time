@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Наукове дослідження — Андрій</title>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            text-align: center;
+            max-width: 850px;
+            border: 1px solid #333;
+        }
+        #secret-report {
+            display: none;
+            text-align: left;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 2px #00ff41;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+        /* Стиль скроллбара */
+        #secret-report::-webkit-scrollbar { width: 8px; }
+        #secret-report::-webkit-scrollbar-thumb { background: #00ff41; border-radius: 4px; }
+
+        h1 { color: #ffffff; }
+        .green-title {
+            color: #00ff41;
+            text-transform: uppercase;
+            border-bottom: 2px solid #00ff41;
+            padding-bottom: 10px;
+            margin-top: 25px;
+        }
+        .section-header { font-weight: bold; text-decoration: underline; margin-top: 15px; display: block; }
+        button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #007acc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        button:hover { background: #005fa3; transform: scale(1.05); }
+        .footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #777;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen" class="card">
+        <h1>Вітаю!</h1>
+        <p>Вас вітає Андрій. Даний вебресурс створено для демонстрації результатів мого дослідження в галузі ядерної фізики та історії атомної енергетики.</p>
+        <p>Натисніть кнопку нижче, щоб ознайомитися з повною доповіддю.</p>
+        <button onclick="showReport()">Перейти до дослідження</button>
+    </div>
+
+    <div id="secret-report" class="card">
+        <h2 class="green-title">Комплексне дослідження: Ядерна зброя та наслідки бомбардування Хіросіми та Нагасакі</h2>
+        
+        <span class="section-header">1. Історичний контекст та "Манхеттенський проєкт"</span>
+        <p>Розробка першої у світі ядерної зброї почалася в 1942 році під кодовою назвою «Манхеттенський проєкт». Під керівництвом фізика Роберта Оппенгеймера було створено три бомби: «Gadget» (випробувальна), «Little Boy» (уранова) та «Fat Man» (плутонієва). Основною метою було досягнення критичної маси радіоактивної речовини для створення неконтрольованої ланцюгової реакції.</p>
+
+        <span class="section-header">2. Хіросіма: Технічний аналіз вибуху 6 серпня 1945 року</span>
+        <p>О 08:15 за місцевим часом літак B-29 «Enola Gay» скинув бомбу «Little Boy». Вибух стався на висоті 600 метрів. <br>
+        - Енергія вибуху: приблизно 15 кілотонн у тротиловому еквіваленті.<br>
+        - Температура в епіцентрі: сягнула 4000°C, що призвело до миттєвого випаровування органічних структур.<br>
+        - Ударна хвиля: швидкість перевищувала 440 м/с, знищуючи будівлі в радіусі 4 кілометрів.</p>
+
+        <span class="section-header">3. Нагасакі: Специфіка використання плутонію 9 серпня 1945 року</span>
+        <p>Бомба «Fat Man» була значно потужнішою (21 кілотонна), але рельєф міста Нагасакі (гори) стримав поширення ударної хвилі. Проте, радіоактивне зараження виявилося критичним. Було зафіксовано «чорний дощ» — радіоактивні опади, що спричинили масову променеву хворобу серед тих, хто вижив після першого удару.</p>
+
+        <span class="section-header">4. Термодинаміка та вплив на сучасну безпеку реакторів</span>
+        <p>Аналіз даних цих подій дозволив вченим розробити сучасні системи захисту ядерних реакторів. Вивчення поведінки ядерного палива в екстремальних умовах лежить в основі роботи систем стримування (контайнменту) та аварійного охолодження зони реактора. Це дослідження підкреслює, що ядерна енергія потребує найвищого рівня відповідальності.</p>
+
+        <span class="section-header">5. Глобальні висновки дослідження</span>
+        <p>Використання ядерної енергії назавжди змінило геополітичну карту світу. Сучасна фізика спрямована на використання процесу ділення ядер виключно в мирних цілях, мінімізуючи ризики повторення подій 1945 року.</p>
+
+        <div class="footer">Наукову роботу підготував: <strong>Андрій</strong><br>© 2026 Всі права захищені.</div>
+        <button onclick="location.reload()" style="background: #333; font-size: 0.8rem;">Повернутися до початку</button>
+    </div>
+
+    <script>
+        function showReport() {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('secret-report').style.display = 'block';
+            document.body.style.backgroundColor = "#050505";
+        }
+    </script>
+</body>
+</html>
