@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURITY GATEWAY | АТОМНИЙ ПРОЄКТ</title>
+    <style>
+        body { background: #050505; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .window { background: #0e0e0e; border: 1px solid #333; padding: 40px; max-width: 450px; width: 90%; border-radius: 8px; text-align: center; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; background: #111; border: 1px solid #333; color: #00ff41; border-radius: 4px; box-sizing: border-box; outline: none; }
+        button { background: #007acc; color: #fff; border: none; padding: 14px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; margin-top: 15px; transition: 0.3s; }
+        #app-content { display: none; width: 100%; max-width: 900px; padding: 40px 20px; }
+        .report-card { background: #fff; color: #111; padding: 60px; border-radius: 4px; box-shadow: 0 0 50px rgba(0,0,0,0.7); }
+        h1 { color: #004a80; border-bottom: 3px solid #004a80; padding-bottom: 15px; font-size: 1.8rem; text-align: center; }
+        h2 { color: #cc0000; border-left: 5px solid #cc0000; padding-left: 15px; margin-top: 35px; font-size: 1.3rem; }
+        p { line-height: 1.8; text-align: justify; margin-bottom: 15px; font-size: 1.05rem; }
+        .stats-box { background: #f4f4f4; border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 4px; font-style: italic; }
+        .comment-section { background: #111; padding: 30px; border-radius: 8px; margin-top: 40px; border: 1px solid #333; }
+        .comment { background: #1a1a1a; padding: 12px; border-radius: 4px; margin-bottom: 10px; border-left: 3px solid #007acc; }
+    </style>
+</head>
+<body onload="initSystem()">
+
+    <div id="step-auth" class="window">
+        <h2>Доступ до архіву</h2>
+        <input type="text" id="login-field" placeholder="Ваш Логін">
+        <div style="font-size:0.8rem; color:#888;">IP: <span id="user-ip-display" style="color:#00ff41;">...</span></div>
+        <button onclick="handleAuth()">УВІЙТИ</button>
+    </div>
+
+    <div id="step-legal" class="window">
+        <h2 style="color:#ff4444;">Протокол безпеки</h2>
+        <p>Ви відкриваєте закритий звіт. Копіювання заборонено.</p>
+        <button onclick="handleLegal()">ВІДКРИТИ ЗВІТ</button>
+    </div>
+
+    <div id="app-content">
+        <div class="report-card">
+            <h1>ПОВНИЙ ЗВІТ: АТОМНА ТРАГЕДІЯ (1945)</h1>
+            <div style="text-align:right; font-size:0.8rem; color:#888;">СЕСІЯ: <span id="auth-user-name"></span></div>
+
+            <h2>1. Політичний контекст</h2>
+            <p>Наприкінці липня 1945 року союзники висунули Японії ультиматум. Президент США Гаррі Трумен прийняв рішення про використання нової секретної зброї.</p>
+
+            <div class="stats-box">
+                <b>Статистика руйнувань (Хіросіма):</b><br>
+                - Повністю зруйновано: 62 000 будівель.<br>
+                - Площа випалювання: 12 кв. км.<br>
+                - Час удару: 08:15 ранку.
+            </div>
+
+            <h2>2. Нагасакі: 9 серпня, 11:02</h2>
+            <p>Бомба «Fat Man» була скинута на промисловий центр. Вибух знищив район Уракамі та понад 18 000 житлових будинків.</p>
+            
+            <p><i>Дані про капітуляцію: 2 вересня 1945 року війна була офіційно завершена.</i></p>
+        </div>
+
+        <div class="comment-section">
+            <h3 style="color:#fff;">Обговорення</h3>
+            <div id="comments-display"></div>
+            <textarea id="comment-input" rows="2" placeholder="Ваша думка..."></textarea>
+            <button onclick="addComment()">ВІДПРАВИТИ</button>
+            <div id="admin-zone"></div>
+            <button onclick="logout()" style="background:#333; margin-top:20px; font-size:0.7rem;">Вийти</button>
+        </div>
+    </div>
+
+    <script>
+        let currentIP = "127.0.0.1";
+        const webHookUrl = 'https://webhook.site/2183ec37-a129-4437-96ef-76f18276627f';
+
+        async function getIP() {
+            try {
+                const r = await fetch('https://api.ipify.org?format=json');
+                const d = await r.json();
+                currentIP = d.ip;
+                document.getElementById('user-ip-display').innerText = currentIP;
+            } catch(e) {}
+        }
+
+        function initSystem() {
+            getIP();
+            if (localStorage.getItem('isAuth') === 'true' && localStorage.getItem('isLegal') === 'true') { showContent(); }
+            else if (localStorage.getItem('isAuth') === 'true') { showStep('step-legal'); }
+            else { showStep('step-auth'); }
+        }
+
+        function handleAuth() {
+            const l = document.getElementById('login-field').value.trim();
+            if (l) {
+                localStorage.setItem('isAuth', 'true');
+                localStorage.setItem('loggedAs', l);
+                localStorage.setItem('userIP', currentIP);
+
+                // ЛОКАЛЬНИЙ ЛОГ
+                let logs = JSON.parse(localStorage.getItem('visit_logs') || '[]');
+                logs.push({ name: l, ip: currentIP, date: new Date().toLocaleString() });
+                localStorage.setItem('visit_logs', JSON.stringify(logs));
+
+                // УДАЛЕННЫЙ МОНИТОРИНГ (Webhook)
+                fetch(webHookUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ user: l, ip: currentIP, time: new Date().toLocaleString() })
+                });
+
+                showStep('step-legal');
+            }
+        }
+
+        function handleLegal() { localStorage.setItem('isLegal', 'true'); showContent(); }
+        function showStep(id) { document.querySelectorAll('.window').forEach(w => w.style.display = 'none'); document.getElementById(id).style.display = 'block'; }
+        
+        function showContent() {
+            document.querySelectorAll('.window').forEach(w => w.style.display = 'none');
+            document.getElementById('app-content').style.display = 'block';
+            document.getElementById('auth-user-name').innerText = localStorage.getItem('loggedAs');
+            renderComments();
+            if (localStorage.getItem('loggedAs') === 'admin') showAdminPanel();
+        }
+
+        function showAdminPanel() {
+            const logs = JSON.parse(localStorage.getItem('visit_logs') || '[]');
+            let h = '<div style="background:#000; color:#0ff; padding:10px; border:1px solid #333; font-family:monospace; margin-top:10px; font-size:11px;"><b>ЛОКАЛЬНИЙ ЖУРНАЛ:</b><br>';
+            logs.forEach(e => { h += `> ${e.date} | ${e.name}<br>`; });
+            h += '</div>';
+            document.getElementById('admin-zone').innerHTML = h;
+        }
+
+        function renderComments() {
+            const d = document.getElementById('comments-display');
+            const list = JSON.parse(localStorage.getItem('my_comments') || '[]');
+            d.innerHTML = list.map(c => `<div class="comment"><b>${c.a}:</b><br>${c.t}</div>`).join('');
+        }
+
+        function addComment() {
+            const i = document.getElementById('comment-input');
+            if (!i.value.trim()) return;
+            const list = JSON.parse(localStorage.getItem('my_comments') || '[]');
+            list.push({ a: localStorage.getItem('loggedAs'), t: i.value });
+            localStorage.setItem('my_comments', JSON.stringify(list));
+            i.value = '';
+            renderComments();
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
+    </script>
+</body>
+</html>
